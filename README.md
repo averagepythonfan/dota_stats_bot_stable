@@ -1,0 +1,1 @@
+# DotaStatsBot stable version
