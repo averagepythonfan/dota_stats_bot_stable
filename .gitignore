@@ -2,3 +2,6 @@ df.csv
 mytable.png
 /venv
 /queries/__pycache__
+.env
+/handlers/__pycache__
+/__pycache__
