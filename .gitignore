@@ -5,3 +5,4 @@ mytable.png
 .env
 /handlers/__pycache__
 /__pycache__
+test.py
