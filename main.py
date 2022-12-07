@@ -1,7 +1,7 @@
 import os
 import asyncio
 from config import TOKEN, ADMIN_ID
-from handlers import bot_commands
+from handlers import bot_commands, register_user_commands
 
 from aiogram import Dispatcher, Bot
 from aiogram import types
@@ -16,6 +16,8 @@ async def main():
     bot = Bot(token=TOKEN)
     dp = Dispatcher(bot)
     await bot.set_my_commands(commands=commands_for_bot)
+
+    register_user_commands(dp)
 
     await dp.start_polling()
 
