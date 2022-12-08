@@ -57,7 +57,7 @@ async def winrate_wilson_command(message : types.Message):
     pass
 
 #admin handlers
-async def update_player_command(message : types.Message): #TEST SUCSESSFULLY
+async def update_player_command(message : types.Message): #TEST SUCCESSFULLY
     async with aiohttp.ClientSession() as session:
         async with session.get('https://api.opendota.com/api/proPlayers') as resp:
             if resp.status == 200:
