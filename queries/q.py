@@ -132,3 +132,35 @@ HAVING count(distinct matches.match_id) >= 1
 ORDER BY "AVG Kills" DESC,count DESC NULLS LAST
 LIMIT 200
 '''
+
+team = '''
+SELECT
+        heroes.localized_name ,
+avg(kills) "AVG Kills",
+count(distinct matches.match_id) count,
+sum(case when (player_matches.player_slot < 128) = radiant_win then 1 else 0 end)::float/count(1) winrate,
+((sum(case when (player_matches.player_slot < 128) = radiant_win then 1 else 0 end)::float/count(1)) 
++ 1.96 * 1.96 / (2 * count(1)) 
+- 1.96 * sqrt((((sum(case when (player_matches.player_slot < 128) = radiant_win then 1 else 0 end)::float/count(1)) * (1 - (sum(case when (player_matches.player_slot < 128) = radiant_win then 1 else 0 end)::float/count(1))) + 1.96 * 1.96 / (4 * count(1))) / count(1))))
+/ (1 + 1.96 * 1.96 / count(1)) winrate_wilson,
+sum(kills) sum,
+min(kills) min,
+max(kills) max,
+stddev(kills::numeric) stddev
+  
+FROM matches
+JOIN match_patch using(match_id)
+JOIN leagues using(leagueid)
+JOIN player_matches using(match_id)
+JOIN heroes on heroes.id = player_matches.hero_id
+LEFT JOIN notable_players ON notable_players.account_id = player_matches.account_id
+LEFT JOIN teams using(team_id)
+WHERE TRUE
+AND kills IS NOT NULL 
+AND match_patch.patch >= '{patch}'
+AND (notable_players.team_id = {team_id})
+GROUP BY heroes.localized_name
+HAVING count(distinct matches.match_id) >= 1
+ORDER BY "AVG Kills" DESC,count DESC NULLS LAST
+LIMIT 200
+'''
